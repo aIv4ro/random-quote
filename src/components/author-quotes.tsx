@@ -7,17 +7,23 @@ export function AuthorQuotes () {
   const [, params] = useRoute('/author/:name')
   if (params == null) return <>No author name provided</>
   const { name } = params
+  const decodedName = decodeURIComponent(name)
   const { quotes, isLoading } = useAuthorQuotes({ author: name })
 
-  if (isLoading) return <Spinner />
+  if (isLoading) {
+    return (
+      <section>
+        <h3 className='text-2xl border-transparent pl-32 border-l-4 my-5' style={{ viewTransitionName: 'author-name' }}>{decodedName}</h3>
+        <Spinner />
+      </section>
+    )
+  }
 
   if (quotes == null) return <>Author quotes not found</>
 
-  const [firstQuote] = quotes
-
   return (
     <section>
-      <h3 className='text-2xl border-transparent pl-32 border-l-4 my-5'>{firstQuote.quoteAuthor}</h3>
+      <h3 className='text-2xl border-transparent pl-32 border-l-4 my-5' style={{ viewTransitionName: 'author-name' }}>{decodedName}</h3>
       <ul className='flex flex-col gap-5 overflow-auto'>
         {quotes.map(quote => {
           return (
